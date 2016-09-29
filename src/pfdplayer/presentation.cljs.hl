@@ -1,0 +1,60 @@
+(ns pfdplayer.presentation
+  (:require [pfdplayer.elements :as elem]
+            [hoplon.svg :as svg]))
+
+(defn presentation-context []
+  {:step-width 225
+   :step-height 75
+   :begin-y 50
+   :begin-x 200
+   :nva-offset 5})
+
+(defn pfd-presentation [{:keys [viewport-height viewport-width steps zoom]}]
+  (svg/svg
+   :height (cell= (* viewport-height zoom))
+   :width (cell= (* viewport-width zoom))
+   :hack/viewBox (cell= (str "0 0 " viewport-width " " viewport-height))
+
+   (elem/svg-defs)
+
+   (for [{:keys [x y t d name nva]} steps]
+     (cond
+
+       (= :directive t)
+       (svg/g
+        :hack/class "step va"
+        (svg/use :xlink/href "#vad" :x x :y y)
+        (svg/text :x x :y y name))
+
+       (= :end t)
+       (svg/g :hack/class "step va"
+              (svg/use :xlink/href "#vae" :x x :y y)
+              (svg/text :y y :x x "end"))
+
+       (= :predicate t)
+       [(svg/g :hack/class "step va"
+               (svg/use :xlink/href "#vap" :x x :y y)
+               (svg/use :xlink/href "#nva-arrow" :x x :y y)
+               (svg/text :x x :y y name))
+
+        ;; NVA steps
+        (for [{:keys [x y t d name]} nva]
+          (cond
+
+            (= :directive t)
+            (svg/g
+             :hack/class "step nva"
+             (svg/use :xlink/href "#nvad" :x x :y y)
+             (svg/text :x x :y y name))
+
+            (= :predicate t)
+            (svg/g
+             :hack/class "step nva"
+             (svg/use :xlink/href "#nvap" :x x :y y)
+             (svg/text :x x :y y name))
+
+            (= :end t)
+            (svg/g :hack/class "step nva"
+                   (svg/use :xlink/href "#nvae" :x x :y y)
+                   (svg/text :x x :y y "end"))))]
+       ))))

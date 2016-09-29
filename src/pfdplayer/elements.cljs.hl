@@ -1,0 +1,47 @@
+(ns pfdplayer.elements
+  (:require [hoplon.svg :as svg]))
+
+(defmethod hoplon.core/do! :xlink/*
+  [elem kw val]
+  (let [xlink "http://www.w3.org/1999/xlink"]
+    (.setAttributeNS elem xlink (name kw) val)))
+
+(defmethod hoplon.core/do! :hack/*
+  [elem kw val]
+  (.setAttributeNS elem nil (name kw) val))
+
+(defelem svg-defs [attr kids]
+  (svg/defs
+    (svg/polyline :id "va-arrow"
+                  :points "0,25 0,50 5,40 -5,40 0,50")
+
+    (svg/polyline :id "nva-arrow"
+                  :points "100,0 125,0 115,5 115,-5 125,0")
+
+    (svg/g :id "vad"
+           (svg/rect :x -100 :y -25
+                     :width 200 :height 50)
+           (svg/use :xlink/href "#va-arrow"))
+
+    (svg/g :id "nvad"
+           (svg/rect :x -100 :y -25
+                     :width 200 :height 50)
+           (svg/use :xlink/href "#nva-arrow"))
+
+    (svg/rect :id "nvae"
+              :x -100 :y -25
+              :rx 30 :ry 30
+              :width 200 :height 50)
+
+    (svg/rect :id "vae"
+              :x -100 :y -25
+              :rx 30 :ry 30
+              :width 200 :height 50)
+
+    (svg/g :id "nvap"
+           (svg/polyline :points "0,-25 -100,0 0,25 100,0 0,-25")
+           (svg/use :xlink/href "#nva-arrow"))
+
+    (svg/g :id "vap"
+           (svg/polyline :points "0,-25 -100,0 0,25 100,0 0,-25")
+           (svg/use :xlink/href "#va-arrow"))))

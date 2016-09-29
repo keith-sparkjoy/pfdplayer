@@ -1,0 +1,28 @@
+(page "index.html"
+      (:require [pfdplayer.elements :as elem]
+                [pfdplayer.presentation :as pres]
+                [pfdplayer.data.pfd :as data]
+                [pfdplayer.vm.pfd :as vm]
+                [hoplon.svg :as svg]
+                [clojure.pprint :refer [pprint]]))
+
+(defc zoom 1)
+
+(html
+ (head
+  (link :href "app.css" :rel "stylesheet"))
+ (body
+  (h1 "Sample process flow diagram")
+
+  (div
+   (label "Zoom"
+          (input :type "range" :min 0.25 :max 4 :step .01 :value 1.0
+                 :input #(reset! zoom @%))))
+
+  (let [vm (vm/pfd->vm (data/sample-pfd)
+                       (pres/presentation-context)
+                       zoom)]
+    [(pres/pfd-presentation vm)
+     (hr)
+     (pre (with-out-str (pprint vm)))])))
+

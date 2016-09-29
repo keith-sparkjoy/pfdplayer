@@ -1,0 +1,40 @@
+body {
+    margin: 0;
+    padding: 20px;
+    background-color: #333;
+    color: #CCC;
+}
+
+g.step {
+    stroke-width: 5;
+    fill: none;
+}
+
+g.step.nva {
+    stroke: #800;
+}
+
+g.step.va {
+    stroke: #050;
+}
+
+g.step text {
+    stroke: none;
+    fill: #AAA;
+    font-family: sans-serif;
+    font-size: 10pt;
+    text-anchor: middle;
+    alignment-baseline: central;
+}
+
+g.current.step.va {
+    stroke: #0B0;
+}
+
+g.current.step.nva {
+    stroke: #F00;
+}
+
+g.current.step text {
+    fill: white;
+}
